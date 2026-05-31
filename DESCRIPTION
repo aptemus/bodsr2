@@ -1,11 +1,18 @@
 Package: bodsr2
-Title: What the Package Does (One Line, Title Case)
+Title: Call the Bus Open Data Service (BODS) API Through R
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Nancy", "Pickering", , "your@email.com", role = c("aut", "cre"))
+Description: A wrapper to call the Bus Open Data Service BODS API using httr2. Provides functions to retrieve real-time vehicle location data in SIRI-VM and GTFS-RT formats, timetable and fare metadata, and utilities for parsing responses into tidy data frames.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    dplyr,
+    httr2,
+    purrr,
+    tibble
