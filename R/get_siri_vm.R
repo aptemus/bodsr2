@@ -1,85 +1,117 @@
-#' Get real-time vehicle locations from the BODS SIRI-VM API
+#' Get real-time vehicle locations as a tidy data frame
 #'
-#' Fetches live bus vehicle location data from the Bus Open Data Service
-#' in SIRI-VM (XML) format.
+#' Fetches and parses live bus vehicle location data from the Bus Open Data
+#' Service (BODS) SIRI-VM API, returning a tidy tibble. This is the primary
+#' interface for most users. For access to the raw XML response, see
+#' [get_raw_siri_vm()]. To parse a previously fetched response, see
+#' [parse_siri_vm()].
 #'
-#' @param api_key API key for the BODS dataset. Defaults to the value of
-#'   the `BODS_KEY` environment variable.
-#' @param min_lat latitude of lower left corner of bounding box
-#'   Note that bounding box parameters are specified as latitude/longitude pairs
-#'   (bottom left corner first, then top right), which follows the human
-#'   geographic convention. Internally these are converted to the longitude-first
-#'   ordering required by the BODS API (following the GeoJSON convention).
-#' @param min_lon longitude of lower left corner of bounding box
-#' @param max_lat latitude of upper right corner of bounding box
-#' @param max_lon longitude of upper right corner of bounding box
-#' @param operator_ref A string. National Operator Code (NOC) to filter results
-#'   to a specific operator. Defaults to `NULL`.
-#' @param line_ref A string. Line reference to filter results to a specific
-#'   service. Defaults to `NULL`.
-#' @param vehicle_ref A string. Vehicle reference to filter to a specific
-#'   vehicle. Defaults to `NULL`.
+#' @inheritParams get_raw_siri_vm
 #'
-#' @return A named list with two elements:
-#'   \describe{
-#'     \item{xml}{An `xml_document` object containing the raw SIRI-VM response}
-#'     \item{fetched_at}{A `POSIXct` timestamp recording when the response was received}
-#'   }
+#' @return A tibble with one row per vehicle activity record. See
+#'   [parse_siri_vm()] for a full description of columns.
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' # All vehicles in a bounding box around South Derbyshire
-#' xml <- get_siri_vm(min_lat=52.70, min_lon=-1.75, max_lat=52.95, max_lon=-1.45)
+#' vehicles <- get_siri_vm(
+#'   min_lat = 52.70,
+#'   max_lat = 52.95,
+#'   min_lon = -1.75,
+#'   max_lon = -1.45
+#' )
 #'
 #' # Filter to a specific operator
-#' xml <- get_siri_vm(
-#'   min_lat=52.70, min_lon=-1.75, max_lat=52.95, max_lon=-1.45,
+#' vehicles <- get_siri_vm(
+#'   min_lat      = 52.70,
+#'   max_lat      = 52.95,
+#'   min_lon      = -1.75,
+#'   max_lon      = -1.45,
 #'   operator_ref = "TBTN"
 #' )
 #' }
 get_siri_vm <- function(
     api_key      = Sys.getenv("BODS_KEY"),
     min_lat      = NULL,
-    min_lon      = NULL,
     max_lat      = NULL,
+    min_lon      = NULL,
     max_lon      = NULL,
     operator_ref = NULL,
     line_ref     = NULL,
     vehicle_ref  = NULL
 ) {
 
-  if (api_key == "") {
-    cli::cli_abort(
-      "No API key found. Set the {.envvar BODS_KEY} environment variable or pass {.arg api_key} directly."
-    )
+  # TODO: If BODS introduces bounding box size limits in future, add
+  # validation here. Currently the API returns all vehicles in a single
+  # response with no documented size restriction.
+
+  # Validate bounding box values if provided
+  if (!is.null(min_lat) || !is.null(max_lat) ||
+      !is.null(min_lon) || !is.null(max_lon)) {
+
+    if (is.null(min_lat) || is.null(max_lat) ||
+        is.null(min_lon) || is.null(max_lon)) {
+      cli::cli_abort(
+        "All four bounding box parameters must be provided together: {.arg min_lat}, {.arg max_lat}, {.arg min_lon}, {.arg max_lon}."
+      )
+    }
+
+    if (!is.numeric(min_lat) || !is.numeric(max_lat) ||
+        !is.numeric(min_lon) || !is.numeric(max_lon)) {
+      cli::cli_abort("Bounding box parameters must be numeric.")
+    }
+
+    if (min_lat < -90 || max_lat > 90) {
+      cli::cli_abort(
+        "Latitude values must be between -90 and 90. Got {.val {min_lat}} and {.val {max_lat}}."
+      )
+    }
+
+    if (min_lon < -180 || max_lon > 180) {
+      cli::cli_abort(
+        "Longitude values must be between -180 and 180. Got {.val {min_lon}} and {.val {max_lon}}."
+      )
+    }
+
+    if (min_lat >= max_lat) {
+      cli::cli_abort(
+        "{.arg min_lat} ({.val {min_lat}}) must be less than {.arg max_lat} ({.val {max_lat}})."
+      )
+    }
+
+    if (min_lon >= max_lon) {
+      cli::cli_abort(
+        "{.arg min_lon} ({.val {min_lon}}) must be less than {.arg max_lon} ({.val {max_lon}})."
+      )
+    }
   }
 
-
-
-  req <- httr2::request("https://data.bus-data.dft.gov.uk/api/v1/datafeed/") |>
-    httr2::req_url_query(api_key = api_key) |>
-    httr2::req_timeout(15) |>
-    httr2::req_user_agent("bodsr2 (https://github.com/aptemus/bodsr2)")
-
-  if (!is.null(min_lat) && !is.null(max_lat) &&
-      !is.null(min_lon) && !is.null(max_lon)) {
-    bounding_box <- paste(min_lon, min_lat, max_lon, max_lat, sep = ",")
-    req <- req |> httr2::req_url_query(boundingBox = bounding_box)
-  }
-
-  resp <- req |>
-    httr2::req_error(is_error = \(resp) FALSE) |>
-    httr2::req_perform()
-
-  if (httr2::resp_is_error(resp)) {
-    cli::cli_abort(
-      "BODS API request failed with status {httr2::resp_status(resp)}."
-    )
-  }
-
-  list(
-    xml        = resp |> httr2::resp_body_xml(),
-    fetched_at = as.POSIXct(Sys.time(), tz = "UTC")
+  # Fetch and parse
+  result <- get_raw_siri_vm(
+    api_key      = api_key,
+    min_lat      = min_lat,
+    max_lat      = max_lat,
+    min_lon      = min_lon,
+    max_lon      = max_lon,
+    operator_ref = operator_ref,
+    line_ref     = line_ref,
+    vehicle_ref  = vehicle_ref
   )
+
+  vehicles <- parse_siri_vm(result)
+
+  # Warn if operator_ref was supplied but no matching vehicles returned
+  if (!is.null(operator_ref) && nrow(vehicles) > 0) {
+    actual_operators <- unique(vehicles$operator_ref)
+    if (!operator_ref %in% actual_operators) {
+      cli::cli_warn(c(
+        "!" = "No vehicles found for operator {.val {operator_ref}}.",
+        "i" = "Operators present in this bounding box: {.val {actual_operators}}.",
+        "i" = "Check the National Operator Code (NOC) is correct."
+      ))
+    }
+  }
+
+  vehicles
 }

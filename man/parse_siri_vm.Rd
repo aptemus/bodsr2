@@ -7,7 +7,7 @@
 parse_siri_vm(result)
 }
 \arguments{
-\item{result}{A named list as returned by \code{\link[=get_siri_vm]{get_siri_vm()}}, containing
+\item{result}{A named list as returned by \code{\link[=get_raw_siri_vm]{get_raw_siri_vm()}}, containing
 elements \code{xml} (the raw SIRI-VM response) and \code{fetched_at} (the fetch
 timestamp).}
 }
@@ -40,7 +40,7 @@ Use this for application logic such as deciding whether to display or dim a vehi
 }
 }
 \description{
-Takes the raw \code{xml_document} returned by \code{\link[=get_siri_vm]{get_siri_vm()}} and extracts
+Takes the raw \code{xml_document} returned by \code{\link[=get_raw_siri_vm]{get_raw_siri_vm()}} and extracts
 vehicle activity records into a tidy tibble. One row per vehicle.
 }
 \details{
@@ -52,7 +52,7 @@ to appear in results.
 }
 \examples{
 \dontrun{
-xml <- get_siri_vm(
+xml <- get_raw_siri_vm(
   api_key      = Sys.getenv("BODS_KEY"),
   min_lat      = 52.70,
   min_lon      = -1.75,

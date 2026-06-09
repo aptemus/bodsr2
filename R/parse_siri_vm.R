@@ -1,6 +1,6 @@
 #' Parse a SIRI-VM XML response into a tidy data frame
 #'
-#' Takes the raw `xml_document` returned by [get_siri_vm()] and extracts
+#' Takes the raw `xml_document` returned by [get_raw_siri_vm()] and extracts
 #' vehicle activity records into a tidy tibble. One row per vehicle.
 #'
 #' Note that field availability varies by operator. Fields such as
@@ -9,7 +9,7 @@
 #' covered by the BODS statutory requirement and Welsh operators are unlikely
 #' to appear in results.
 #'
-#' @param result A named list as returned by [get_siri_vm()], containing
+#' @param result A named list as returned by [get_raw_siri_vm()], containing
 #'   elements `xml` (the raw SIRI-VM response) and `fetched_at` (the fetch
 #'   timestamp).
 #'
@@ -43,7 +43,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' xml <- get_siri_vm(
+#' xml <- get_raw_siri_vm(
 #'   api_key      = Sys.getenv("BODS_KEY"),
 #'   min_lat      = 52.70,
 #'   min_lon      = -1.75,

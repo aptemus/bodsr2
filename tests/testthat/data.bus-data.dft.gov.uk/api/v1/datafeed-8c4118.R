@@ -1,0 +1,16 @@
+structure(list(method = "GET", url = "https://data.bus-data.dft.gov.uk/api/v1/datafeed/?api_key=REDACTED&boundingBox=1.6%2C52.8%2C1.7%2C52.9", 
+    status_code = 200L, headers = structure(list(`content-type` = "text/xml",
+        `content-length` = "668", date = "Tue, 02 Jun 2026 16:55:20 GMT",
+        `content-security-policy` = "default-src 'self'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:; object-src 'none'; frame-ancestors 'self'; img-src 'self' data: blob:; connect-src 'self' *.mapbox.com *.localhost:8000 *.bus-data.dft.gov.uk google-analytics.com; script-src 'self' 'unsafe-inline' www.googletagmanager.com ajax.googleapis.com/ajax/libs/jquery google-analytics.com; font-src 'self'",
+        `set-cookie` = "REDACTED", `set-cookie` = "REDACTED",
+        server = "gunicorn", allow = "GET, HEAD, OPTIONS", vary = "Cookie, origin",
+        `permissions-policy` = "geolocation=(self), microphone=(self), camera=(self)",
+        `x-frame-options` = "DENY", `strict-transport-security` = "max-age=31536000",
+        `x-content-type-options` = "nosniff", `referrer-policy` = "same-origin",
+        `cross-origin-opener-policy` = "same-origin", `x-cache` = "Miss from cloudfront",
+        via = "1.1 5633f59304cdd2083a4c0ecbd4c997b4.cloudfront.net (CloudFront)",
+        `x-amz-cf-pop` = "LHR50-P8", `x-amz-cf-id` = "8H03nBY5nOusb2HWCjRePbCqI_u4gOCPIIwoZkArZ3p0IkiQlKJ7mw=="), class = "httr2_headers"),
+    body = charToRaw("<Siri version=\"2.0\" xmlns=\"http://www.siri.org.uk/siri\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.siri.org.uk/siri http://www.siri.org.uk/schema/2.0/xsd/siri.xsd\"><ServiceDelivery><ResponseTimestamp>2026-06-02T16:55:20.072+00:00</ResponseTimestamp><ProducerRef>DepartmentForTransport</ProducerRef><VehicleMonitoringDelivery><ResponseTimestamp>2026-06-02T16:55:20.072+00:00</ResponseTimestamp><RequestMessageRef>63900bfe-db16-434f-b3b7-5730626049fb</RequestMessageRef><ValidUntil>2026-06-02T17:00:20.072+00:00</ValidUntil><ShortestPossibleCycle>PT5S</ShortestPossibleCycle></VehicleMonitoringDelivery></ServiceDelivery></Siri>"),
+    timing = c(redirect = 0, namelookup = 0.012834, connect = 0.030306,
+    pretransfer = 0.061244, starttransfer = 0.155482, total = 0.155712
+    ), cache = new.env(parent = emptyenv())), class = "httr2_response")
