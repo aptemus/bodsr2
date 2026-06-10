@@ -31,7 +31,7 @@
 #'     \item{longitude}{Vehicle longitude as numeric}
 #'     \item{bearing}{Vehicle bearing in degrees as numeric, `NA` if not published}
 #'     \item{occupancy}{Passenger occupancy level as reported by the operator, `NA` if not published}
-#'     \item{vehicle_ref}{Vehicle reference — format varies by operator}
+#'     \item{vehicle_ref}{Vehicle reference - format varies by operator}
 #'     \item{recorded_at}{Time the vehicle position was recorded as `POSIXct`}
 #'     \item{valid_until_time}{Time until which this record is considered valid, as `POSIXct`}
 #'     \item{age_at_fetch_seconds}{Seconds elapsed between `recorded_at` and the time the feed was fetched.
@@ -61,7 +61,7 @@ parse_siri_vm <- function(result) {
   activities <- xml2::xml_find_all(xml, "//*[local-name()='VehicleActivity']")
 
   if (length(activities) == 0) {
-    cli::cli_inform("No VehicleActivity nodes found in response — returning empty tibble.")
+    cli::cli_inform("No VehicleActivity nodes found in response - returning empty tibble.")
     return(tibble::tibble())
   }
 

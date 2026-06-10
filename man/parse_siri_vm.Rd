@@ -30,7 +30,7 @@ the following columns:
 \item{longitude}{Vehicle longitude as numeric}
 \item{bearing}{Vehicle bearing in degrees as numeric, \code{NA} if not published}
 \item{occupancy}{Passenger occupancy level as reported by the operator, \code{NA} if not published}
-\item{vehicle_ref}{Vehicle reference — format varies by operator}
+\item{vehicle_ref}{Vehicle reference - format varies by operator}
 \item{recorded_at}{Time the vehicle position was recorded as \code{POSIXct}}
 \item{valid_until_time}{Time until which this record is considered valid, as \code{POSIXct}}
 \item{age_at_fetch_seconds}{Seconds elapsed between \code{recorded_at} and the time the feed was fetched.

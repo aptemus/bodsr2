@@ -22,8 +22,12 @@ the \code{BODS_KEY} environment variable.}
 \item{min_lat}{latitude of lower left corner of bounding box
 Note that bounding box parameters are specified as latitude/longitude pairs
 (bottom left corner first, then top right), which follows the human
-geographic convention. Internally these are converted to the longitude-first
-ordering required by the BODS API (following the GeoJSON convention).}
+geographic convention. Internally these are converted to the longitude-first.
+ordering required by the BODS API (following the GeoJSON convention).
+For large bounding boxes covering dense urban areas, consider also
+supplying \code{operator_ref} to reduce response size. The BODS API
+currently returns all matching vehicles in a single response with no
+pagination; the minimum poll interval is 5 seconds.}
 
 \item{max_lat}{latitude of upper right corner of bounding box}
 

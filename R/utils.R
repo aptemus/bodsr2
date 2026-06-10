@@ -1,0 +1,10 @@
+utils::globalVariables(c(
+  "age_at_fetch_seconds",
+  "bearing",
+  "destination_aimed_arrival_time",
+  "latitude",
+  "longitude",
+  "origin_aimed_departure_time",
+  "recorded_at",
+  "valid_until_time"
+))
