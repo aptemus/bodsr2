@@ -72,6 +72,18 @@ get_raw_siri_vm <- function(
     req <- req |> httr2::req_url_query(boundingBox = bounding_box)
   }
 
+  if (!is.null(operator_ref)) {
+    req <- req |> httr2::req_url_query(operatorRef = operator_ref)
+  }
+
+  if (!is.null(line_ref)) {
+    req <- req |> httr2::req_url_query(lineRef = line_ref)
+  }
+
+  if (!is.null(vehicle_ref)) {
+    req <- req |> httr2::req_url_query(vehicleRef = vehicle_ref)
+  }
+
   resp <- req |>
     httr2::req_error(is_error = \(resp) FALSE) |>
     httr2::req_perform()

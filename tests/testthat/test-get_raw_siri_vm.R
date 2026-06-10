@@ -63,3 +63,19 @@ test_that("get_raw_siri_vm returns valid result with no vehicles", {
     expect_named(result, c("xml", "fetched_at"))
   })
 })
+
+test_that("get_raw_siri_vm includes operator_ref in request URL", {
+  with_mock_api({
+    result <- get_raw_siri_vm(
+      api_key      = "REDACTED",
+      min_lat      = 52.70,
+      max_lat      = 52.95,
+      min_lon      = -1.75,
+      max_lon      = -1.45,
+      operator_ref = "TBTN"
+    )
+    # The fixture for this request must have operatorRef in its URL
+    # If the parameter wasn't being sent, it would match a different fixture
+    expect_s3_class(result$xml, "xml_document")
+  })
+})
