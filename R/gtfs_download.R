@@ -2,7 +2,7 @@
 #'
 #' Downloads the GTFS zip file for the specified region from the Bus Open Data
 #' Service and stores it in the bodsr2 cache directory. Also extracts
-#' [feed_info.txt] and writes it as `{region}_feed_info.json` to the cache.
+#' `feed_info.txt` and writes it as `{region}_feed_info.json` to the cache.
 #'
 #' @param region A string. One of `"east_midlands"`, `"east_anglia"`,
 #'   `"london"`, `"north_east"`, `"north_west"`, `"scotland"`,
