@@ -18,4 +18,5 @@ Imports:
     httr2,
     purrr,
     tibble,
-    xml2
+    xml2,
+    tidytransit
