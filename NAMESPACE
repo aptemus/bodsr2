@@ -3,4 +3,5 @@
 export(filter_fresh)
 export(get_raw_siri_vm)
 export(get_siri_vm)
+export(gtfs_cache_dir)
 export(parse_siri_vm)
