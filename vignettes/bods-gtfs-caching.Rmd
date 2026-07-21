@@ -1,0 +1,138 @@
+---
+title: "Downloading and caching BODS GTFS data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Downloading and caching BODS GTFS data}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(bodsr2)
+```
+
+## Introduction
+
+The [Bus Open Data Service (BODS)](https://data.bus-data.dft.gov.uk/)
+provides timetable data for bus services in England as regional GTFS zip
+files. These files are large — the East Midlands zip is around 600MB —
+and downloading one on every session would be impractical.
+
+`bodsr2` solves this with a simple caching layer. The first call to
+`gtfs_load()` downloads the zip, parses it into a
+[tidytransit](https://r-transit.github.io/tidytransit/) object, and
+saves it to a local cache. Subsequent calls load directly from the
+cache, which is dramatically faster.
+
+## Loading GTFS data
+
+```{r load, eval = FALSE}
+library(bodsr2)
+
+gtfs <- gtfs_load("east_midlands")
+#> ℹ Downloading GTFS data for "east_midlands" from BODS.
+#> ℹ This file is large and may take a moment.
+#> ✔ Zip saved to ~/.cache/R/bodsr2/east_midlands.zip
+#> ℹ Reading GTFS zip for "east_midlands". This may take a moment.
+#> ✔ GTFS data cached to ~/.cache/R/bodsr2/east_midlands.rds
+```
+
+On a typical connection this takes around 40 seconds. The second call is
+much faster:
+
+```{r load-cached, eval = FALSE}
+gtfs <- gtfs_load("east_midlands")
+# completes in around 3 seconds
+```
+
+The cache is stored in your platform's user cache directory. You can
+find it with `gtfs_cache_dir()`, and clear it with
+`gtfs_delete_cache("east_midlands")`.
+
+The cache is automatically refreshed when the GTFS feed expires
+(indicated by `feed_end_date` in the feed info). You can also force a
+fresh download at any time:
+
+```{r force-download, eval = FALSE}
+gtfs <- gtfs_load("east_midlands", download = TRUE)
+```
+
+## What's in the object
+
+`gtfs_load()` returns a `tidygtfs` object — a named list of tibbles, one
+for each GTFS table:
+
+```{r names, eval = FALSE}
+names(gtfs)
+#>  [1] "agency"         "stops"          "routes"         "calendar"      
+#>  [5] "calendar_dates" "trips"          "shapes"         "feed_info"     
+#>  [9] "stop_times"
+```
+
+This is a standard tidytransit object. See the [tidytransit
+documentation](https://r-transit.github.io/tidytransit/) for a full
+guide to working with it. The rest of this vignette shows one example to
+illustrate the kind of analysis the object supports.
+
+## Example: services departing from Derby Bus Station Bay 4
+
+The V1 Villager service (Derby to Burton-upon-Trent) departs from Bay 4
+at Derby Bus Station. Its stop ID in the GTFS data is `"1090BSTN04"`:
+
+```{r derby-stop, eval = FALSE}
+gtfs$stops |>
+  dplyr::filter(stop_id == "1090BSTN04") |>
+  dplyr::select(stop_id, stop_name, platform_code)
+#> # A tibble: 1 × 3
+#>   stop_id    stop_name   platform_code
+#>   <chr>      <chr>       <chr>        
+#> 1 1090BSTN04 Bus Station 4
+```
+
+To find all services that start from this stop, we look for trips where
+this stop appears at the lowest stop sequence number:
+
+```{r bay4-services, eval = FALSE}
+library(dplyr)
+
+gtfs$stop_times |>
+  filter(stop_id == "1090BSTN04") |>
+  left_join(gtfs$trips, by = "trip_id") |>
+  left_join(gtfs$routes, by = "route_id") |>
+  distinct(route_short_name, trip_headsign)
+#> # A tibble: 9 × 2
+#>   route_short_name trip_headsign            
+#>   <chr>            <chr>                    
+#> 1 V1               Derby Bus Station        
+#> 2 V1               Burton                   
+#> 3 V1               Burton Train Stn         
+#> 4 TP               Derby Bus Station (Bay 4)
+#> 5 70               Derby Bus Station        
+#> 6 70A              Derby Bus Station        
+#> 7 70A              Methodist Church         
+#> 8 V1               Wetmore                  
+#> 9 70A              Willington
+```
+
+Four routes use Bay 4: the V1, TP, 70, and 70A. The `trip_headsign`
+column shows the destination as displayed on the front of the bus, which
+is more informative than `route_long_name` (not always populated in BODS
+GTFS data). The V1 entries include both outbound trips (to Burton and
+Wetmore) and inbound trips terminating at Derby Bus Station, since Bay 4
+serves as both the origin and terminus for this route.
+
+## Further reading
+
+For timetable analysis, service pattern queries, and stop-level
+departure boards, see the [tidytransit
+vignettes](https://r-transit.github.io/tidytransit/articles/).
