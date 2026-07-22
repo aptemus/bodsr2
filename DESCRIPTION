@@ -10,6 +10,8 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests: 
     httptest2,
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
@@ -18,4 +20,6 @@ Imports:
     httr2,
     purrr,
     tibble,
-    xml2
+    xml2,
+    tidytransit
+VignetteBuilder: knitr
