@@ -1,0 +1,201 @@
+# bodsr2
+
+An R package for accessing the [Bus Open Data Service
+(BODS)](https://data.bus-data.dft.gov.uk/), the UK government’s open
+data platform for bus location and timetable data in England. bodsr2
+provides two things:
+
+- real-time vehicle locations via the SIRI-VM API using
+  [httr2](https://httr2.r-lib.org/), parsed into tidy data frames
+  suitable for use with the tidyverse;
+- and a caching layer for BODS regional GTFS timetable files, designed
+  to feed directly into
+  [tidytransit](https://r-transit.github.io/tidytransit/).
+
+These data sources can be combined to support rich bus tracking and
+timetable information.
+
+`bodsr2` was inspired by
+[bodsr](https://cran.r-project.org/package=bodsr) by Francesca Bryden
+(Department for Transport). It extends that work with an httr2-based
+implementation, tidy tibble output, improved parameter handling and
+tidytransit integration.
+
+## What bodsr2 is and isn’t for
+
+**Well suited for:**
+
+- Tracking a small number of specific vehicles or routes in real time
+- Combining live SIRI-VM positions with GTFS timetable data for a
+  specific route
+- Building route-specific tools and dashboards in R or Shiny
+- Timetable analysis for one or more routes using tidytransit
+
+**Not suited for:**
+
+- Real-time tracking of all vehicles across a large area (use GTFS-RT
+  directly)
+- Applications requiring sub-second latency (the BODS consumer rate
+  limit is one request per 5 seconds)
+- Scottish or Welsh operators (BODS covers England only)
+
+For a fuller discussion of format choices and how bodsr2 relates to
+[bodsr](https://cran.r-project.org/package=bodsr),
+[UK2GTFS](https://itsleeds.github.io/UK2GTFS/), and tidytransit, see
+[Format choices and ecosystem
+context](#format-choices-and-ecosystem-context) below.
+
+> **Note:** This package was developed with AI assistance (Claude by
+> Anthropic).
+
+## Status
+
+This is a personal hobby project, developed primarily for my own use and
+released in case others find it useful. It is not under active
+maintenance — issues and PRs are welcome but I cannot commit to
+addressing them promptly. If you’re building something that depends on
+this package, please fork it.
+
+## Installation
+
+You can install the development version of bodsr2 from GitHub:
+
+``` r
+
+# install.packages("remotes")
+remotes::install_github("aptemus/bodsr2")
+```
+
+## Getting started
+
+You will need a free API key from the [Bus Open Data
+Service](https://data.bus-data.dft.gov.uk/account/signup/). Once
+registered, add your key to your `.Renviron` file:
+
+``` r
+
+BODS_KEY=your-api-key-here
+```
+
+Then restart R. `bodsr2` will use this key by default.
+
+## Example
+
+``` r
+
+library(bodsr2)
+library(dplyr)
+library(mapview)
+library(sf)
+
+# Fetch live vehicle locations for a bounding box around South Derbyshire
+# and filter to Trent Barton vehicles updated within the last 10 minutes
+vehicles <- get_siri_vm(
+  min_lat      = 52.70,
+  max_lat      = 52.95,
+  min_lon      = -1.75,
+  max_lon      = -1.45,
+  operator_ref = "TBTN"
+) |>
+  filter_fresh(max_age_seconds = 600)
+
+# Filter to Burton-bound services and visualise
+vehicles |>
+  filter(grepl("Burton", destination_name)) |>
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
+  mapview(zcol = "published_line_name")
+```
+
+## Primary interface
+
+**Real-time vehicle locations (SIRI-VM)**
+
+| Function | Description |
+|----|----|
+| [`get_siri_vm()`](https://aptemus.github.io/bodsr2/reference/get_siri_vm.md) | Fetch and parse live vehicle locations into a tidy tibble |
+| [`get_raw_siri_vm()`](https://aptemus.github.io/bodsr2/reference/get_raw_siri_vm.md) | Fetch the raw SIRI-VM XML response |
+
+**Timetable data (GTFS)**
+
+| Function | Description |
+|----|----|
+| [`gtfs_load()`](https://aptemus.github.io/bodsr2/reference/gtfs_load.md) | Download and cache the regional GTFS zip; return a tidytransit object |
+
+**Utility functions**
+
+| Function | Description |
+|----|----|
+| [`parse_siri_vm()`](https://aptemus.github.io/bodsr2/reference/parse_siri_vm.md) | Parse a raw SIRI-VM response into a tidy tibble |
+| [`filter_fresh()`](https://aptemus.github.io/bodsr2/reference/filter_fresh.md) | Remove stale records from the BODS SIRI-VM feed |
+| [`gtfs_is_stale()`](https://aptemus.github.io/bodsr2/reference/gtfs_is_stale.md) | Check whether the cached GTFS data needs refreshing |
+| [`gtfs_cache_dir()`](https://aptemus.github.io/bodsr2/reference/gtfs_cache_dir.md) | Return the path to the bodsr2 cache directory |
+| [`gtfs_delete_cache()`](https://aptemus.github.io/bodsr2/reference/gtfs_delete_cache.md) | Delete cached GTFS files for a region |
+
+## Notes on the BODS API feed
+
+- The BODS API covers bus services in **England only**. Welsh and
+  Scottish operators are not included.
+- The feed may contain **ghost buses** - vehicles whose position data is
+  many hours old. Use
+  [`filter_fresh()`](https://aptemus.github.io/bodsr2/reference/filter_fresh.md)
+  to remove these.
+- An unknown `operator_ref` is silently ignored by the API, which
+  returns all vehicles in the bounding box instead.
+  [`get_siri_vm()`](https://aptemus.github.io/bodsr2/reference/get_siri_vm.md)
+  will warn if the supplied operator code does not appear in the
+  results.
+- The BODS consumer rate limit is one request per 5 seconds.
+- Field availability varies by operator. `bearing`, `occupancy`, and
+  `destination_aimed_arrival_time` are optional in the SIRI-VM standard
+  and will be `NA` where not published.
+
+## Format choices and ecosystem context
+
+BODS provides real-time vehicle location data in two formats:
+**SIRI-VM** (XML) and **GTFS-RT** (binary protobuf). bodsr2 uses
+SIRI-VM. GTFS-RT is designed for high-frequency, low-latency consumption
+and suits city-wide transit displays. SIRI-VM is richer per vehicle -
+each response includes operator, origin, destination, bearing, and aimed
+departure times - and is more straightforward to parse in R. For
+tracking a small number of specific vehicles on known routes, SIRI-VM is
+the better choice. For tracking every bus across a large area in real
+time, GTFS-RT is more appropriate.
+
+BODS provides timetable data in two formats: **TransXChange** (XML) and
+**GTFS** (zip of CSV files). bodsr2 uses GTFS, primarily because it
+allows the package to build on tidytransit rather than parsing complex
+XML directly. The GTFS files on BODS are converted from TransXChange by
+[ITO World](https://www.itoworld.com) and cover the same timetable
+content without meaningful loss of data for analysis purposes.
+
+[bodsr](https://cran.r-project.org/package=bodsr) by Francesca Bryden
+(DfT) is the original R client for BODS. It uses GTFS-RT for real-time
+data and TransXChange for timetables - the opposite format choices to
+bodsr2. Both are valid approaches to the same underlying data. bodsr2
+was inspired by bodsr and borrows its name; it is not a fork or official
+successor.
+
+[UK2GTFS](https://itsleeds.github.io/UK2GTFS/) converts TransXChange and
+other UK transport formats to GTFS. It is most useful for historical
+data or sources that predate BODS’s own GTFS downloads. For current BODS
+data, the regional GTFS zips are generally easier to use directly.
+
+[tidytransit](https://r-transit.github.io/tidytransit/) provides tools
+for working with GTFS data in R. bodsr2’s GTFS caching layer is designed
+to feed directly into tidytransit - bodsr2 handles the download and
+caching, tidytransit handles the analysis.
+
+## Acknowledgements
+
+Thanks to the [Department for
+Transport](https://www.gov.uk/government/organisations/department-for-transport)
+and the [Bus Open Data Service](https://data.bus-data.dft.gov.uk/) team
+for building and maintaining a genuinely useful open API, and to
+Francesca Bryden for the original
+[bodsr](https://cran.r-project.org/package=bodsr) package which inspired
+this one.
+
+## Getting help
+
+- [File an issue](https://github.com/aptemus/bodsr2/issues)
+- Contact: <dev@antonberry.dev>
