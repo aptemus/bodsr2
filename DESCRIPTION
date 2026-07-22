@@ -2,8 +2,8 @@ Package: bodsr2
 Title: Call the Bus Open Data Service (BODS) API Through R
 Version: 0.0.0.9000
 Authors@R: 
-    person("Nancy", "Pickering", , "your@email.com", role = c("aut", "cre"))
-Description: A wrapper to call the Bus Open Data Service BODS API using httr2. Provides functions to retrieve real-time vehicle location data in SIRI-VM and GTFS-RT formats, timetable and fare metadata, and utilities for parsing responses into tidy data frames.
+    person("Nancy", "Pickering", , "dev@antonberry.dev", role = c("aut", "cre"))
+Description: Description: An R package for accessing the Bus Open Data Service (BODS), the UK government's open data platform for bus location and timetable data in England. Provides functions to retrieve real-time vehicle locations via the SIRI-VM API and a caching layer for BODS regional GTFS timetable files, designed to feed directly into tidytransit.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -21,5 +21,6 @@ Imports:
     purrr,
     tibble,
     xml2,
-    tidytransit
+    tidytransit,
+    jsonlite
 VignetteBuilder: knitr
