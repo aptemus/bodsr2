@@ -29,5 +29,7 @@ Invisibly returns the paths of the deleted files.
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 gtfs_delete_cache("east_midlands")
+} # }
 ```

@@ -122,22 +122,25 @@ vehicle. Defaults to <code>NULL</code>.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># All vehicles in a bounding box around South Derbyshire</span></span>
-<span><span class="va">vehicles</span> <span class="op">&lt;-</span> <span class="fu">get_siri_vm</span><span class="op">(</span></span>
-<span>  min_lat <span class="op">=</span> <span class="fl">52.70</span>,</span>
-<span>  max_lat <span class="op">=</span> <span class="fl">52.95</span>,</span>
-<span>  min_lon <span class="op">=</span> <span class="op">-</span><span class="fl">1.75</span>,</span>
-<span>  max_lon <span class="op">=</span> <span class="op">-</span><span class="fl">1.45</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Filter to a specific operator</span></span>
-<span><span class="va">vehicles</span> <span class="op">&lt;-</span> <span class="fu">get_siri_vm</span><span class="op">(</span></span>
-<span>  min_lat      <span class="op">=</span> <span class="fl">52.70</span>,</span>
-<span>  max_lat      <span class="op">=</span> <span class="fl">52.95</span>,</span>
-<span>  min_lon      <span class="op">=</span> <span class="op">-</span><span class="fl">1.75</span>,</span>
-<span>  max_lon      <span class="op">=</span> <span class="op">-</span><span class="fl">1.45</span>,</span>
-<span>  operator_ref <span class="op">=</span> <span class="st">"TBTN"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># All vehicles in a bounding box around South Derbyshire</span></span></span>
+<span class="r-in"><span><span class="va">vehicles</span> <span class="op">&lt;-</span> <span class="fu">get_siri_vm</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  min_lat <span class="op">=</span> <span class="fl">52.70</span>,</span></span>
+<span class="r-in"><span>  max_lat <span class="op">=</span> <span class="fl">52.95</span>,</span></span>
+<span class="r-in"><span>  min_lon <span class="op">=</span> <span class="op">-</span><span class="fl">1.75</span>,</span></span>
+<span class="r-in"><span>  max_lon <span class="op">=</span> <span class="op">-</span><span class="fl">1.45</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Filter to a specific operator</span></span></span>
+<span class="r-in"><span><span class="va">vehicles</span> <span class="op">&lt;-</span> <span class="fu">get_siri_vm</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  min_lat      <span class="op">=</span> <span class="fl">52.70</span>,</span></span>
+<span class="r-in"><span>  max_lat      <span class="op">=</span> <span class="fl">52.95</span>,</span></span>
+<span class="r-in"><span>  min_lon      <span class="op">=</span> <span class="op">-</span><span class="fl">1.75</span>,</span></span>
+<span class="r-in"><span>  max_lon      <span class="op">=</span> <span class="op">-</span><span class="fl">1.45</span>,</span></span>
+<span class="r-in"><span>  operator_ref <span class="op">=</span> <span class="st">"TBTN"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

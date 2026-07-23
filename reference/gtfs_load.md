@@ -29,5 +29,7 @@ A tidytransit object (list of tibbles).
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 gtfs <- gtfs_load("east_midlands")
+} # }
 ```

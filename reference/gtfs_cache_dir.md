@@ -20,4 +20,5 @@ A string giving the path to the cache directory.
 
 ``` r
 gtfs_cache_dir()
+#> [1] "/home/runner/.cache/R/bodsr2"
 ```

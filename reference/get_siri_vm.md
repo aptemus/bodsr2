@@ -77,6 +77,7 @@ for a full description of columns.
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 # All vehicles in a bounding box around South Derbyshire
 vehicles <- get_siri_vm(
   min_lat = 52.70,
@@ -93,4 +94,5 @@ vehicles <- get_siri_vm(
   max_lon      = -1.45,
   operator_ref = "TBTN"
 )
+} # }
 ```
