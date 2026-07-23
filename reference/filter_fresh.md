@@ -38,7 +38,6 @@ A tibble with the same columns as the input, with stale records removed.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 vehicles <- get_siri_vm(
   min_lat      = 52.70,
   max_lat      = 52.95,
@@ -52,5 +51,4 @@ fresh <- filter_fresh(vehicles)
 
 # Keep only vehicles updated within the last 2 minutes
 very_fresh <- filter_fresh(vehicles, max_age_seconds = 120)
-} # }
 ```
