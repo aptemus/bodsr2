@@ -22,5 +22,7 @@ as an RDS file for fast subsequent access. On repeated calls, the cached
 RDS is returned directly without re-reading the zip.
 }
 \examples{
+\dontrun{
 gtfs <- gtfs_load("east_midlands")
+}
 }

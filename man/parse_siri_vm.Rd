@@ -51,6 +51,7 @@ covered by the BODS statutory requirement and Welsh operators are unlikely
 to appear in results.
 }
 \examples{
+\dontrun{
 xml <- get_raw_siri_vm(
   api_key      = Sys.getenv("BODS_KEY"),
   min_lat      = 52.70,
@@ -60,4 +61,5 @@ xml <- get_raw_siri_vm(
   operator_ref = "TBTN"
 )
 vehicles <- parse_siri_vm(xml)
+}
 }

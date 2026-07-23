@@ -56,6 +56,7 @@ Fetches live bus vehicle location data from the Bus Open Data Service
 in SIRI-VM (XML) format.
 }
 \examples{
+\dontrun{
 # All vehicles in a bounding box around South Derbyshire
 xml <- get_raw_siri_vm(min_lat=52.70, min_lon=-1.75, max_lat=52.95, max_lon=-1.45)
 
@@ -64,4 +65,5 @@ xml <- get_raw_siri_vm(
   min_lat=52.70, min_lon=-1.75, max_lat=52.95, max_lon=-1.45,
   operator_ref = "TBTN"
 )
+}
 }

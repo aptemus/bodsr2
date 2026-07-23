@@ -26,6 +26,7 @@ are ghost buses that have finished their service but not been purged from
 the feed.
 }
 \examples{
+\dontrun{
 vehicles <- get_siri_vm(
   min_lat      = 52.70,
   max_lat      = 52.95,
@@ -39,4 +40,5 @@ fresh <- filter_fresh(vehicles)
 
 # Keep only vehicles updated within the last 2 minutes
 very_fresh <- filter_fresh(vehicles, max_age_seconds = 120)
+}
 }

@@ -13,7 +13,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' gtfs <- gtfs_load("east_midlands")
+#' }
 gtfs_load <- function(region = "east_midlands", download = FALSE) {
 
   gtfs_validate_region(region)
