@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' vehicles <- get_siri_vm(
 #'   min_lat      = 52.70,
 #'   max_lat      = 52.95,
