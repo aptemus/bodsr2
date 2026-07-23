@@ -26,7 +26,7 @@ are ghost buses that have finished their service but not been purged from
 the feed.
 }
 \examples{
-\donttest{
+\dontrun{
 vehicles <- get_siri_vm(
   min_lat      = 52.70,
   max_lat      = 52.95,
