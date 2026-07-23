@@ -12,8 +12,7 @@
 #'   [parse_siri_vm()] for a full description of columns.
 #' @export
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf nzchar(Sys.getenv("BODS_KEY")) || identical(Sys.getenv("IN_PKGDOWN"), "true")
 #' # All vehicles in a bounding box around South Derbyshire
 #' vehicles <- get_siri_vm(
 #'   min_lat = 52.70,
@@ -30,7 +29,6 @@
 #'   max_lon      = -1.45,
 #'   operator_ref = "TBTN"
 #' )
-#' }
 get_siri_vm <- function(
     api_key      = Sys.getenv("BODS_KEY"),
     min_lat      = NULL,

@@ -12,10 +12,8 @@
 #' @return A tidytransit object (list of tibbles).
 #' @export
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf nzchar(Sys.getenv("BODS_KEY")) || identical(Sys.getenv("IN_PKGDOWN"), "true")
 #' gtfs <- gtfs_load("east_midlands")
-#' }
 gtfs_load <- function(region = "east_midlands", download = FALSE) {
 
   gtfs_validate_region(region)

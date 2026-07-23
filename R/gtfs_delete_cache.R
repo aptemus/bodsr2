@@ -12,10 +12,8 @@
 #' @return Invisibly returns the paths of the deleted files.
 #' @export
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf nzchar(Sys.getenv("BODS_KEY")) || identical(Sys.getenv("IN_PKGDOWN"), "true")
 #' gtfs_delete_cache("east_midlands")
-#' }
 gtfs_delete_cache <- function(region = "east_midlands", confirm = TRUE) {
 
   gtfs_validate_region(region)

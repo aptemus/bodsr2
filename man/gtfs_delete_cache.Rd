@@ -22,7 +22,7 @@ file, feed info JSON, and the cached RDS file. Use this to force a
 fresh download or to clean up files downloaded for testing.
 }
 \examples{
-\dontrun{
+\dontshow{if (nzchar(Sys.getenv("BODS_KEY")) || identical(Sys.getenv("IN_PKGDOWN"), "true")) withAutoprint(\{ # examplesIf}
 gtfs_delete_cache("east_midlands")
-}
+\dontshow{\}) # examplesIf}
 }

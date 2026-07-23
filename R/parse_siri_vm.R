@@ -41,8 +41,7 @@
 #'   }
 #' @export
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf nzchar(Sys.getenv("BODS_KEY")) || identical(Sys.getenv("IN_PKGDOWN"), "true")
 #' xml <- get_raw_siri_vm(
 #'   api_key      = Sys.getenv("BODS_KEY"),
 #'   min_lat      = 52.70,
@@ -52,7 +51,6 @@
 #'   operator_ref = "TBTN"
 #' )
 #' vehicles <- parse_siri_vm(xml)
-#' }
 parse_siri_vm <- function(result) {
 
   xml        <- result$xml

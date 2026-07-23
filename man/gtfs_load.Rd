@@ -22,7 +22,7 @@ as an RDS file for fast subsequent access. On repeated calls, the cached
 RDS is returned directly without re-reading the zip.
 }
 \examples{
-\dontrun{
+\dontshow{if (nzchar(Sys.getenv("BODS_KEY")) || identical(Sys.getenv("IN_PKGDOWN"), "true")) withAutoprint(\{ # examplesIf}
 gtfs <- gtfs_load("east_midlands")
-}
+\dontshow{\}) # examplesIf}
 }
