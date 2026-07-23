@@ -13,7 +13,6 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # All vehicles in a bounding box around South Derbyshire
 #' vehicles <- get_siri_vm(
 #'   min_lat = 52.70,
@@ -30,7 +29,6 @@
 #'   max_lon      = -1.45,
 #'   operator_ref = "TBTN"
 #' )
-#' }
 get_siri_vm <- function(
     api_key      = Sys.getenv("BODS_KEY"),
     min_lat      = NULL,

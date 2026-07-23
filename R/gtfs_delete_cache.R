@@ -13,9 +13,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' gtfs_delete_cache("east_midlands")
-#' }
 gtfs_delete_cache <- function(region = "east_midlands", confirm = TRUE) {
 
   gtfs_validate_region(region)

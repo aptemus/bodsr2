@@ -1,5 +1,3 @@
 url: https://aptemus.github.io/bodsr2/
 template:
   bootstrap: 5
-code:
-  run_dont_run: true

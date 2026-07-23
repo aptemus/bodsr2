@@ -17,7 +17,6 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' vehicles <- get_siri_vm(
 #'   min_lat      = 52.70,
 #'   max_lat      = 52.95,
@@ -31,7 +30,6 @@
 #'
 #' # Keep only vehicles updated within the last 2 minutes
 #' very_fresh <- filter_fresh(vehicles, max_age_seconds = 120)
-#' }
 filter_fresh <- function(vehicles, max_age_seconds = 300) {
 
   if (!is.numeric(max_age_seconds) || max_age_seconds <= 0) {

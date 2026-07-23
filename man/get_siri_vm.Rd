@@ -56,7 +56,6 @@ interface for most users. For access to the raw XML response, see
 \code{\link[=parse_siri_vm]{parse_siri_vm()}}.
 }
 \examples{
-\dontrun{
 # All vehicles in a bounding box around South Derbyshire
 vehicles <- get_siri_vm(
   min_lat = 52.70,
@@ -73,5 +72,4 @@ vehicles <- get_siri_vm(
   max_lon      = -1.45,
   operator_ref = "TBTN"
 )
-}
 }

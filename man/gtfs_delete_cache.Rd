@@ -22,7 +22,5 @@ file, feed info JSON, and the cached RDS file. Use this to force a
 fresh download or to clean up files downloaded for testing.
 }
 \examples{
-\dontrun{
 gtfs_delete_cache("east_midlands")
-}
 }
