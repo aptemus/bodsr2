@@ -79,3 +79,34 @@ test_that("get_raw_siri_vm includes operator_ref in request URL", {
     expect_s3_class(result$xml, "xml_document")
   })
 })
+
+test_that("get_raw_siri_vm() errors informatively on HTML response", {
+  html_body <- charToRaw(
+    "<html><body><h1>Service Unavailable</h1><p>Try again later.</p></body></html>"
+  )
+
+  mock_resp <- httr2::response(
+    status_code = 200,
+    headers = list("Content-Type" = "text/html; charset=utf-8"),
+    body = html_body
+  )
+
+  with_mocked_bindings(
+    req_perform = function(...) mock_resp,
+    .package = "httr2",
+    {
+      expect_error(
+        get_raw_siri_vm(api_key = "test_key"),
+        class = "rlang_error"
+      )
+      expect_error(
+        get_raw_siri_vm(api_key = "test_key"),
+        regexp = "text/html"
+      )
+      expect_error(
+        get_raw_siri_vm(api_key = "test_key"),
+        regexp = "Service Unavailable"
+      )
+    }
+  )
+})

@@ -50,6 +50,8 @@ A named list with two elements:
 \item{xml}{An \code{xml_document} object containing the raw SIRI-VM response}
 \item{fetched_at}{A \code{POSIXct} timestamp recording when the response was received}
 }
+.  Aborts if the request fails, if the API returns a non-2xx status, or if
+the response body is not XML (for example, an HTML maintenance page).
 }
 \description{
 Fetches live bus vehicle location data from the Bus Open Data Service

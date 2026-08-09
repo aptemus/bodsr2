@@ -29,6 +29,9 @@
 #'     \item{xml}{An `xml_document` object containing the raw SIRI-VM response}
 #'     \item{fetched_at}{A `POSIXct` timestamp recording when the response was received}
 #'   }
+#'.  Aborts if the request fails, if the API returns a non-2xx status, or if
+#'   the response body is not XML (for example, an HTML maintenance page).
+#'
 #' @export
 #'
 #' @examplesIf nzchar(Sys.getenv("BODS_KEY")) || identical(Sys.getenv("IN_PKGDOWN"), "true")
@@ -96,6 +99,23 @@ get_raw_siri_vm <- function(
 
     cli::cli_abort(
       "BODS API request failed with status {httr2::resp_status(resp)}: {error_msg}"
+    )
+  }
+
+  content_type <- httr2::resp_content_type(resp)
+  if (!startsWith(content_type, "text/xml") &&
+      !startsWith(content_type, "application/xml")) {
+    body_text <- tryCatch({
+      raw <- httr2::resp_body_string(resp)
+      stripped <- gsub("<[^>]+>", " ", raw)
+      stripped <- gsub("\\s+", " ", stripped)
+      trimws(substr(stripped, 1, 500))
+    }, error = function(e) "(body unreadable)")
+
+    cli::cli_abort(
+      "BODS API returned unexpected content type {.val {content_type}} \\
+       (status {httr2::resp_status(resp)}). \\
+       Body: {body_text}"
     )
   }
 
