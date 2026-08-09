@@ -114,7 +114,9 @@ vehicle. Defaults to <code>NULL</code>.</p></dd>
 <dd><p>A <code>POSIXct</code> timestamp recording when the response was received</p></dd>
 
 
-</dl></div>
+</dl><p>.  Aborts if the request fails, if the API returns a non-2xx status, or if
+the response body is not XML (for example, an HTML maintenance page).</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
